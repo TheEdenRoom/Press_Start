@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Press Start Marketplace</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121212;
+            color: white;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Background with neon effect */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a0027, #000428);
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .neon-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><g stroke-width="2" stroke-linecap="round"><line x1="0" y1="10%" x2="100%" y2="90%" stroke="%23ff00ff" stroke-opacity="0.2"/><line x1="0" y1="20%" x2="100%" y2="80%" stroke="%2300ffff" stroke-opacity="0.2"/><line x1="0" y1="30%" x2="100%" y2="70%" stroke="%23ffff00" stroke-opacity="0.2"/><line x1="0" y1="40%" x2="100%" y2="60%" stroke="%23ff00ff" stroke-opacity="0.2"/><line x1="0" y1="50%" x2="100%" y2="50%" stroke="%2300ffff" stroke-opacity="0.2"/><line x1="0" y1="60%" x2="100%" y2="40%" stroke="%23ffff00" stroke-opacity="0.2"/><line x1="0" y1="70%" x2="100%" y2="30%" stroke="%23ff00ff" stroke-opacity="0.2"/><line x1="0" y1="80%" x2="100%" y2="20%" stroke="%2300ffff" stroke-opacity="0.2"/><line x1="0" y1="90%" x2="100%" y2="10%" stroke="%23ffff00" stroke-opacity="0.2"/></g></svg>');
+            z-index: -1;
+        }
+
+        .smoke {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: radial-gradient(ellipse at 50% 150%, rgba(0, 255, 187, 0.4) 0%, rgba(0, 255, 187, 0) 70%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            margin-bottom: 5px;
+            transform: skew(-5deg);
+            display: inline-block;
+        }
+
+        .logo span {
+            color: #ff0066;
+        }
+
+        /* Admin Button (Hidden in plain sight) */
+        .admin-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .admin-btn:hover {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Store selector tabs */
+        .store-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 5px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .store-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Edge */
+        }
+
+        .store-tab {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .store-tab.active {
+            background: #ff0066;
+            font-weight: bold;
+        }
+
+        /* Search form */
+        .search-form {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-input input {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 30px;
+            padding: 15px 20px 15px 45px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-input::before {
+            content: "🔍";
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-size: 18px;
+        }
+
+        .search-button {
+            width: 100%;
+            background: linear-gradient(to right, #ff0066, #ff3366);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 0, 102, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            background: linear-gradient(to right, #ff3366, #ff0066);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255, 0, 102, 0.4);
+        }
+
+        /* Hot Clearance Section */
+        .hot-clearance {
+            background: linear-gradient(to right, #ff9900, #ffcc00);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(255, 153, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .fire-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .hot-clearance-text {
+            font-weight: bold;
+            font-size: 18px;
+            color: #222;
+        }
+
+        /* Product grid */
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-image {
+            height: 150px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .product-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            height: 40px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .product-brand {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00ffcc;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        .product-price .regular {
+            text-decoration: line-through;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: normal;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        .clearance-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(to right, #ff0066, #ff3366);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(255, 0, 102, 0.3);
+        }
+
+        .product-actions {
+            padding: 0 15px 15px;
+        }
+
+        .check-inventory-btn {
+            width: 100%;
+            background: linear-gradient(to right, #3300ff, #6600ff);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .check-inventory-btn:hover {
+            background: linear-gradient(to right, #6600ff, #3300ff);
+        }
+
+        /* Store Results Modal */
+        .store-results {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            overflow: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .store-results-content {
+            background-color: #121212;
+            margin: 50px auto;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .store-product-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .store-product-image {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .store-product-image img {
+            max-width: 70px;
+            max-height: 70px;
+        }
+
+        .store-product-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .store-product-info p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .store-product-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00ffcc;
+        }
+
+        .store-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .store-table th {
+            text-align: left;
+            padding: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .store-table td {
+            padding: 12px 10px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .in-stock {
+            color: #00ffaa;
+            font-weight: bold;
+        }
+
+        .out-of-stock {
+            color: #ff3366;
+        }
+
+        .status {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .status.error {
+            background-color: rgba(255, 0, 0, 0.1);
+            color: #ff6666;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .status.success {
+            background-color: rgba(0, 255, 0, 0.1);
+            color: #66ff99;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 15px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #00ffcc;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hide {
+            display: none;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            overflow: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .admin-panel-content {
+            background-color: #1a1a1a;
+            margin: 50px auto;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #ff0066;
+            text-shadow: 0 0 10px rgba(255, 0, 102, 0.3);
+        }
+
+        .admin-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .add-product-form {
+            display: grid;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: rgba(255, 255, 255, 0.4);
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-submit {
+            background: linear-gradient(to right, #ff0066, #ff3366);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 0, 102, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .form-submit:hover {
+            background: linear-gradient(to right, #ff3366, #ff0066);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255, 0, 102, 0.4);
+        }
+
+        /* Image Upload */
+        .image-upload-container {
+            margin-top: 15px;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .upload-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .upload-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .preview-item {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-remove {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Existing Deals List */
+        .existing-deals {
+            margin-top: 30px;
+        }
+
+        .existing-deals-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .deal-list {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .deal-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .deal-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 10px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deal-thumb img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .deal-info {
+            flex: 1;
+        }
+
+        .deal-title {
+            font-size: 14px;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .deal-price {
+            font-size: 16px;
+            color: #00ffcc;
+        }
+
+        .deal-regular-price {
+            text-decoration: line-through;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .deal-delete {
+            color: #ff3366;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .store-results-content, .admin-panel-content {
+                width: 95%;
+                margin: 30px auto;
+            }
+        }
+
+        /* Empty state */
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .empty-state-button {
+            background: linear-gradient(to right, #3300ff, #6600ff);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .empty-state-button:hover {
+            background: linear-gradient(to right, #6600ff, #3300ff);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="neon-lines"></div>
+        <div class="smoke"></div>
+    </div>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">PRESS <span>START</span> MARKETPLACE</h1>
+            <button class="admin-btn" id="adminBtn">⚙️</button>
+        </header>
+        
+        <div class="store-tabs">
+            <button class="store-tab active" data-store="all">All Stores</button>
+            <button class="store-tab" data-store="walmart">Walmart</button>
+            <button class="store-tab" data-store="target">Target</button>
+            <button class="store-tab" data-store="bestbuy">Best Buy</button>
+            <button class="store-tab" data-store="kohls">Kohl's</button>
+            <button class="store-tab" data-store="amazon">Amazon</button>
+            <button class="store-tab" data-store="gamestop">GameStop</button>
+        </div>
+        
+        <div class="search-form">
+            <div class="search-input">
+                <input type="text" id="zipCode" placeholder="Enter Zip Code or City, State" maxlength="5" pattern="\d{5}">
+            </div>
+            <button id="setZipBtn" class="search-button">Find Deals Now</button>
+        </div>
+        
+        <div id="statusMessage" class="status" style="display: none;"></div>
+        
+        <div id="hotClearance" class="hot-clearance" style="display: none;">
+            <div class="fire-icon">🔥</div>
+            <div class="hot-clearance-text">Hot Clearance Finds</div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Searching for deals...</p>
+        </div>
+        
+        <div id="productResults" class="product-grid"></div>
+        
+        <div id="storeResults" class="store-results">
+            <div class="store-results-content">
+                <span class="close-btn" id="closeBtn">&times;</span>
+                <h2>Store Inventory</h2>
+                <div class="store-product-details" id="storeProductDetails"></div>
+                <div id="inventoryResults">
+                    <table class="store-table">
+                        <thead>
+                            <tr>
+                                <th>Store</th>
+                                <th>Distance</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody id="storeTableBody"></tbody>
+                    </table>
+                </div>
+                <div id="noInventory" class="hide">
+                    <p>No inventory information available for this product at nearby stores.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel">
+            <div class="admin-panel-content">
+                <span class="admin-close-btn" id="adminCloseBtn">&times;</span>
+                <h2 class="admin-title">Deal Management</h2>
+                
+                <form id="addProductForm" class="add-product-form">
+                    <div class="form-group">
+                        <label for="productTitle">Product Title</label>
+                        <input type="text" id="productTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productBrand">Brand</label>
+                        <input type="text" id="productBrand" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productStore">Store</label>
+                        <select id="productStore" required>
+                            <option value="walmart">Walmart</option>
+                            <option value="target">Target</option>
+                            <option value="bestbuy">Best Buy</option>
+                            <option value="kohls">Kohl's</option>
+                            <option value="amazon">Amazon</option>
+                            <option value="gamestop">GameStop</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productModel">Model Number</label>
+                        <input type="text" id="productModel">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productPrice">Price ($)</label>
+                        <input type="number" id="productPrice" min="0.01" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productRegularPrice">Regular Price ($)</label>
+                        <input type="number" id="productRegularPrice" min="0.01" step="0.01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productDescription">Description (Optional)</label>
+                        <textarea id="productDescription"></textarea>
+                    </div>
+                    
+                    <div class="image-upload-container">
+                        <label>Product Images</label>
+                        <div class="upload-btn-wrapper">
+                            <button type="button" class="upload-btn">Upload Images</button>
+                            <input type="file" id="productImages" accept="image/*" multiple>
+                        </div>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                    
+                    <button type="submit" class="form-submit">Add New Deal</button>
+                </form>
+                
+                <div class="existing-deals">
+                    <div class="existing-deals-title">
+                        <span>Existing Deals</span>
+                        <button type="button" id="clearAllDeals" class="upload-btn">Clear All</button>
+                    </div>
+                    <div class="deal-list" id="dealList"></div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Privacy</a>
+                <a href="#">Contact</a>
+                <a href="#">Terms</a>
+            </div>
+            <p>&copy; 2025 Press Start Marketplace. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Sample data for various stores
+        const storeProducts = {
+            walmart: [
+                {
+                    position: 1,
+                    product: {
+                        title: "DEWALT 20V MAX Cordless 1/2 in. Drill/Driver, (2) 20V 1.3Ah Batteries, Charger and Bag",
+                        link: "https://www.walmart.com/ip/DEWALT-20V-MAX-Cordless-1-2-in-Drill-Driver-2-20V-1-3Ah-Batteries-Charger-and-Bag-DCD771C2/204279858",
+                        is_top_rated: true,
+                        brand: "DEWALT",
+                        favorite_count: 10293,
+                        item_id: "204279858",
+                        parent_item_id: "320080548",
+                        store_sku: "1000014677",
+                        model_number: "DCD771C2",
+                        images: ["https://images.thdstatic.com/productImages/c751e460-58f0-405e-8eed-a2ed15997670/svn/dewalt-power-drills-dcd771c2-64_1000.jpg"],
+                        primary_image: "https://images.thdstatic.com/productImages/c751e460-58f0-405e-8eed-a2ed15997670/svn/dewalt-power-drills-dcd771c2-64_1000.jpg",
+                        rating: 4.6,
+                        ratings_total: 10256
+                    },
+                    store: "walmart",
+                    offers: {
+                        primary: {
+                            price: 99,
+                            regular_price: 159,
+                            symbol: "$",
+                            currency: "USD"
+                        }
+                    }
+                },
+                {
+                    position: 3,
+                    product: {
+                        title: "Klein Tools Bi-Metal Hole Saw Set (6-Piece)",
+                        link: "https://www.walmart.com/ip/Klein-Tools-Bi-Metal-Hole-Saw-Set-6-Piece-HSBundle1/305252676",
+                        brand: "Klein Tools",
+                        favorite_count: 88,
+                        item_id: "305252676",
+                        model_number: "HSBundle1",
+                        images: ["https://images.thdstatic.com/productImages/a1d70ed1-c8f8-4bd2-8f9a-662ef0932771/svn/klein-tools-hole-saws-bits-hsbundle1-64_1000.jpg"],
+                        primary_image: "https://images.thdstatic.com/productImages/a1d70ed1-c8f8-4bd2-8f9a-662ef0932771/svn/klein-tools-hole-saws-bits-hsbundle1-64_1000.jpg",
+                        rating: 4.1,
+                        ratings_total: 21
+                    },
+                    store: "walmart",
+                    offers: {
+                        primary: {
+                            price: 37.92,
+                            symbol: "$",
+                            currency: "USD"
+                        }
+                    }
+                }
+            ],
+            target: [
+                {
+                    position: 2,
+                    product: {
+                        title: "Milwaukee M18 18-Volt 5.0 Ah Lithium-Ion XC Extended Capacity Battery Pack",
+                        link: "https://www.target.com/p/milwaukee-m18-18-volt-5-0-ah-lithium-ion-xc-extended-capacity-battery-pack-48-11-1850/205620421",
+                        brand: "Milwaukee",
+                        favorite_count: 3186,
+                        item_id: "205620421",
+                        store_sku: "1001222707",
+                        model_number: "48-11-1850",
+                        images: ["https://images.thdstatic.com/productImages/bdf806f0-ec79-4bf3-a896-c6522b3ec53a/svn/milwaukee-power-tool-batteries-48-11-1850-64_1000.jpg"],
+                        primary_image: "https://images.thdstatic.com/productImages/bdf806f0-ec79-4bf3-a896-c6522b3ec53a/svn/milwaukee-power-tool-batteries-48-11-1850-64_1000.jpg",
+                        rating: 4.6,
+                        ratings_total: 6389
+                    },
+                    store: "target",
+                    offers: {
+                        primary: {
+                            price: 129,
+                            regular_price: 159,
+                            symbol: "$",
+                            currency: "USD"
+                        }
+                    }
+                },
+                {
+                    position: 4,
+                    product: {
+                        title: "Makita 120 MPH 473 CFM LXT 18V X2 (36V) Lithium-Ion Cordless Brushless Leaf Blower (Tool-Only)",
+                        link: "https://www.target.com/p/makita-120-mph-473-cfm-lxt-18v-x2-36v-lithium-ion-cordless-brushless-leaf-blower-tool-only-xbu02z/206058495",
+                        sponsored: true,
+                        brand: "Makita",
+                        favorite_count: 254,
+                        item_id: "206058495",
+                        store_sku: "1001363393",
+                        model_number: "XBU02Z",
+                        images: ["https://images.thdstatic.com/productImages/687d6240-319f-43f5-b0da-1d40ddf481b4/svn/makita-cordless-leaf-blowers-xbu02z-64_1000.jpg"],
+                        primary_image: "https://images.thdstatic.com/productImages/687d6240-319f-43f5-b0da-1d40ddf481b4/svn/makita-cordless-leaf-blowers-xbu02z-64_1000.jpg",
+                        rating: 4.6,
+                        ratings_total: 287
+                    },
+                    store: "target",
+                    offers: {
+                        primary: {
+                            price: 279,
+                            symbol: "$",
+                            currency: "USD"
+                        }
+                    }
+                }
+            ],
+            bestbuy: [
+                {
+                    position: 5,
+                    product: {
+                        title: "Milwaukee SAWZALL Wood and Metal Cutting Bi-Metal Reciprocating Saw Blade Set (10-Piece)",
+                        link: "https://www.bestbuy.com/site/milwaukee-sawzall-wood-and-metal-cutting-bi-metal-reciprocating-saw-blade-set-10-piece-49-22-1110/303135934",
+                        is_top_rated: true,
+                        brand: "Milwaukee",
+                        favorite_count: 4254,
+                        item_id: "303135934",
+                        store_sku: "1002800035",
+                        model_number: "49-22-1110",
+                        images: ["https://images.thdstatic.com/productImages/a01ea5ea-8ffc-40fb-b37f-74ba7d0a497f/svn/milwaukee-reciprocating-saw-blades-49-22-1110-64_1000.jpg"],
+                        primary_image: "https://images.thdstatic.com/productImages/a01ea5ea-8ffc-40fb-b37f-74ba7d0a497f/svn/milwaukee-reciprocating-saw-blades-49-22-1110-64_1000.jpg",
+                        rating: 4.7,
+                        ratings_total: 3752
+                    },
+                    store: "bestbuy",
+                    offers: {
+                        primary: {
+                            price: 14.97,
+                            regular_price: 19.97,
+                            symbol: "$",
+                            currency: "USD"
+                        }
+                    }
+                }
+            ],
+            gamestop: [
+                {
+                    position: 6,
+                    product: {
+                        title: "PlayStation 5 DualSense Wireless Controller - Cosmic Red",
+                        link: "https://www.gamestop.com/accessories/playstation-5-dualsense-wireless-controller-cosmic-red/306975/",
+                        brand: "Sony",
+                        favorite_count: 753,
+                        item_id: "gs-306975",
+                        store_sku: "PS5CTRL-RED",
+                        model_number: "3006435",
+                        images: ["https://media.gamestop.com/i/gamestop/11151851/sony-dualsense-wireless-controller-for-playstation-5---cosmic-red?$pdp2x$"],
+                        primary_image: "https://media.gamestop.com/i/gamestop/11151851/sony-dualsense-wireless-controller-for-playstation-5---cosmic-red?$pdp2x$",
+                        rating: 4.8,
+                        ratings_total: 1452
+                    },
+                    store: "gamestop",
+                    offers: {
+                        primary: {
+                            price: 49.99,
+                            regular_price: 74.99,
+                            symbol: "$",
+                            currency: "USD"
+                        }
+                    }
+                }
+            ],
+            kohls: [{
+                position: 7,
+                product: {
+                    title: "DEWALT 15 Amp Corded 13 in. Heavy-Duty 2-Speed Bench Planer with (3) Knives, In Feed Table and Out Feed Table",
+                    link: "https://www.kohls.com/product/prd-5675834/dewalt-15-amp-corded-13-in-heavy-duty-2-speed-bench-planer.jsp",
+                    is_bestseller: true,
+                    brand: "DEWALT",
+                    favorite_count: 11160,
+                    item_id: "203054755",
+                    store_sku: "1005222702",
+                    model_number: "DW735X",
+                    images: ["https://images.thdstatic.com/productImages/059035f3-c1af-4b7d-b7f4-941e239907a7/svn/yellow-dewalt-planers-dw735x-64_1000.jpg"],
+                    primary_image: "https://images.thdstatic.com/productImages/059035f3-c1af-4b7d-b7f4-941e239907a7/svn/yellow-dewalt-planers-dw735x-64_1000.jpg",
+                    rating: 4.7,
+                    ratings_total: 1276
+                },
+                store: "kohls",
+                offers: {
+                    primary: {
+                        price: 707.89,
+                        symbol: "$",
+                        currency: "USD"
+                    }
+                }
+            }],
+            amazon: []
+        };
+
+        // Simulated store data
+        const nearbyStores = [
+            { id: "121", name: "Cumberland", state: "GA", distance: 0.5 },
+            { id: "2871", name: "Cinnaminson", state: "NJ", distance: 12.5 },
+            { id: "2555", name: "New Castle", state: "DE", distance: 15.3 },
+            { id: "2236", name: "Harleysville", state: "PA", distance: 18.7 },
+            { id: "2830", name: "Eddystone", state: "PA", distance: 8.2 },
+            { id: "1742", name: "Turnersville", state: "NJ", distance: 22.1 }
+        ];
+
+        // Simulated store inventory data (keyed by product ID)
+        const storeInventory = {
+            "204279858": [
+                { storeId: "121", quantity: 28, price: 99.00 },
+                { storeId: "2871", quantity: 14, price: 99.00 },
+                { storeId: "2555", quantity: 0, price: 99.00 },
+                { storeId: "2236", quantity: 7, price: 99.00 }
+            ],
+            "205620421": [
+                { storeId: "121", quantity: 60, price: 129.00 },
+                { storeId: "2871", quantity: 3, price: 129.00 },
+                { storeId: "2555", quantity: 12, price: 129.00 },
+                { storeId: "2830", quantity: 5, price: 129.00 }
+            ],
+            "305252676": [
+                { storeId: "121", quantity: 12, price: 37.92 },
+                { storeId: "2555", quantity: 0, price: 37.92 },
+                { storeId: "1742", quantity: 4, price: 37.92 }
+            ],
+            "206058495": [
+                { storeId: "121", quantity: 7, price: 279.00 },
+                { storeId: "2871", quantity: 0, price: 279.00 },
+                { storeId: "2236", quantity: 2, price: 279.00 }
+            ],
+            "303135934": [
+                { storeId: "121", quantity: 101, price: 14.97 },
+                { storeId: "2871", quantity: 24, price: 14.97 },
+                { storeId: "2555", quantity: 18, price: 14.97 },
+                { storeId: "2236", quantity: 10, price: 14.97 },
+                { storeId: "2830", quantity: 15, price: 14.97 },
+                { storeId: "1742", quantity: 7, price: 14.97 }
+            ],
+            "203054755": [
+                { storeId: "121", quantity: 4, price: 707.89 },
+                { storeId: "2555", quantity: 1, price: 707.89 },
+                { storeId: "2830", quantity: 0, price: 707.89 }
+            ],
+            "gs-306975": [
+                { storeId: "121", quantity: 25, price: 49.99 },
+                { storeId: "2871", quantity: 12, price: 49.99 },
+                { storeId: "2555", quantity: 8, price: 49.99 },
+                { storeId: "2236", quantity: 5, price: 49.99 }
+            ]
+        };
+
+        // Application class
+        class InventorySearchApp {
+            constructor() {
+                this.currentZip = "";
+                this.searchResults = [];
+                this.selectedProduct = null;
+                this.nearbyStores = [];
+                this.maxDistance = 50; // miles
+                this.processedResults = [];
+                this.uploadedImages = [];
+                this.customDeals = [];
+                this.selectedStores = ["all"]; // Default to all stores
+                
+                // Initialize UI elements
+                this.initUI();
+                
+                // Load data from localStorage
+                this.loadFromLocalStorage();
+            }
+            
+            initUI() {
+                // Get DOM elements
+                this.zipInput = document.getElementById('zipCode');
+                this.setZipBtn = document.getElementById('setZipBtn');
+                this.statusMessage = document.getElementById('statusMessage');
+                this.hotClearance = document.getElementById('hotClearance');
+                this.loadingDiv = document.getElementById('loading');
+                this.productResults = document.getElementById('productResults');
+                this.storeResults = document.getElementById('storeResults');
+                this.closeBtn = document.getElementById('closeBtn');
+                this.storeProductDetails = document.getElementById('storeProductDetails');
+                this.storeTableBody = document.getElementById('storeTableBody');
+                this.noInventory = document.getElementById('noInventory');
+                this.storeTabs = document.querySelectorAll('.store-tab');
+                
+                // Admin elements
+                this.adminBtn = document.getElementById('adminBtn');
+                this.adminPanel = document.getElementById('adminPanel');
+                this.adminCloseBtn = document.getElementById('adminCloseBtn');
+                this.addProductForm = document.getElementById('addProductForm');
+                this.productImages = document.getElementById('productImages');
+                this.imagePreview = document.getElementById('imagePreview');
+                this.dealList = document.getElementById('dealList');
+                this.clearAllDeals = document.getElementById('clearAllDeals');
+                
+                // Set up event listeners
+                this.setZipBtn.addEventListener('click', () => this.setZipCode());
+                this.hotClearance.addEventListener('click', () => this.findClearanceProducts());
+                this.closeBtn.addEventListener('click', () => this.closeStoreResults());
+                
+                // Admin event listeners
+                this.adminBtn.addEventListener('click', () => this.openAdminPanel());
+                this.adminCloseBtn.addEventListener('click', () => this.closeAdminPanel());
+                this.addProductForm.addEventListener('submit', (e) => this.handleAddProduct(e));
+                this.productImages.addEventListener('change', (e) => this.handleImageUpload(e));
+                this.clearAllDeals.addEventListener('click', () => this.handleClearAllDeals());
+                
+                // Store tabs event listeners
+                this.storeTabs.forEach(tab => {
+                    tab.addEventListener('click', () => this.handleStoreSelection(tab));
+                });
+                
+                // Initialize with sample data
+                this.loadAllProducts();
+            }
+            
+            // Load all sample products from different stores
+            loadAllProducts() {
+                let allProducts = [];
+                
+                // Combine products from all stores
+                Object.keys(storeProducts).forEach(store => {
+                    allProducts = allProducts.concat(storeProducts[store]);
+                });
+                
+                this.processedResults = this.processSearchResults(allProducts);
+                
+                // Hide loading indicator (initially visible)
+                this.showLoading(false);
+            }
+            
+            // Store tab selection handler
+            handleStoreSelection(tab) {
+                const store = tab.getAttribute('data-store');
+                
+                // Update UI
+                this.storeTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update selected store
+                if (store === 'all') {
+                    this.selectedStores = ['all'];
+                } else {
+                    this.selectedStores = [store];
+                }
+                
+                // If we have a ZIP code set, refresh the products display
+                if (this.currentZip) {
+                    this.displayFilteredProducts();
+                }
+            }
+            
+            // Load custom deals from localStorage
+            loadFromLocalStorage() {
+                const savedDeals = localStorage.getItem('pressStartDeals');
+                if (savedDeals) {
+                    try {
+                        this.customDeals = JSON.parse(savedDeals);
+                        console.log('Loaded custom deals:', this.customDeals.length);
+                    } catch (error) {
+                        console.error('Error loading saved deals:', error);
+                        this.customDeals = [];
+                    }
+                }
+                
+                // Merge custom deals with sample data
+                this.updateAllDeals();
+                
+                // Update the admin panel
+                this.updateDealsList();
+            }
+            
+            // Save custom deals to localStorage
+            saveToLocalStorage() {
+                localStorage.setItem('pressStartDeals', JSON.stringify(this.customDeals));
+            }
+            
+            // Merge custom deals with sample data
+            updateAllDeals() {
+                // First get all sample products
+                let allProducts = [];
+                Object.keys(storeProducts).forEach(store => {
+                    allProducts = allProducts.concat(storeProducts[store]);
+                });
+                
+                const sampleProcessed = this.processSearchResults(allProducts);
+                
+                // Process custom deals
+                const customProcessed = this.customDeals.map(deal => ({
+                    position: 999,
+                    product: {
+                        title: deal.title,
+                        brand: deal.brand,
+                        model_number: deal.model,
+                        images: deal.images,
+                        primary_image: deal.images[0],
+                        item_id: deal.id
+                    },
+                    store: deal.store,
+                    offers: {
+                        primary: {
+                            price: deal.price,
+                            regular_price: deal.regularPrice,
+                            symbol: "$",
+                            currency: "USD"
+                        }
+                    },
+                    isClearance: deal.regularPrice && deal.regularPrice > deal.price,
+                    discountPercent: deal.regularPrice ? Math.round((1 - (deal.price / deal.regularPrice)) * 100) : 0
+                }));
+                
+                // Combine and sort by newest first (custom deals first)
+                this.processedResults = [...customProcessed, ...sampleProcessed];
+            }
+            
+            setZipCode() {
+                const zipCode = this.zipInput.value.trim();
+                if (!zipCode || zipCode.length !== 5 || !/^\d{5}$/.test(zipCode)) {
+                    this.showStatus('Please enter a valid 5-digit ZIP code.', 'error');
+                    return;
+                }
+                
+                this.showLoading(true);
+                
+                // Simulate API call with a delay
+                setTimeout(() => {
+                    this.currentZip = zipCode;
+                    this.nearbyStores = nearbyStores; // Using simulated data
+                    
+                    this.showStatus(`Location set to ZIP: ${zipCode}. Found ${this.nearbyStores.length} nearby stores.`, 'success');
+                    this.hotClearance.style.display = 'flex';
+                    this.showLoading(false);
+                    
+                    // Display products based on selected store filter
+                    this.displayFilteredProducts();
+                }, 800);
+            }
+            
+            // Display products filtered by selected store(s)
+            displayFilteredProducts() {
+                let filteredProducts;
+                
+                // If "all" is selected, show all products
+                if (this.selectedStores.includes('all')) {
+                    filteredProducts = this.processedResults;
+                } else {
+                    // Otherwise filter by the selected store
+                    filteredProducts = this.processedResults.filter(product => 
+                        this.selectedStores.includes(product.store)
+                    );
+                }
+                
+                this.displayProducts(filteredProducts);
+            }
+            
+            findClearanceProducts() {
+                this.showLoading(true);
+                
+                // Simulate API call with a delay
+                setTimeout(() => {
+                    // Get the base list of products to filter from
+                    let baseProducts;
+                    
+                    if (this.selectedStores.includes('all')) {
+                        baseProducts = this.processedResults;
+                    } else {
+                        baseProducts = this.processedResults.filter(product => 
+                            this.selectedStores.includes(product.store)
+                        );
+                    }
+                    
+                    // Filter for clearance items (those with a regular_price > price)
+                    const clearanceItems = baseProducts.filter(item => 
+                        item.isClearance
+                    );
+                    
+                    if (clearanceItems.length === 0) {
+                        this.showStatus('No clearance items found nearby.', 'error');
+                    } else {
+                        this.showStatus(`Found ${clearanceItems.length} hot clearance deals near you!`, 'success');
+                    }
+                    
+                    this.displayProducts(clearanceItems);
+                    this.showLoading(false);
+                }, 800);
+            }
+            
+            checkProductInventory(productId) {
+                this.selectedProduct = this.processedResults.find(p => 
+                    p.product.item_id === productId || 
+                    (typeof p.product.item_id === 'number' && p.product.item_id.toString() === productId)
+                );
+                
+                if (!this.selectedProduct) {
+                    this.showStatus('Product not found.', 'error');
+                    return;
+                }
+                
+                this.showLoading(true);
+                
+                // Simulate API call with a delay
+                setTimeout(() => {
+                    // Get inventory for this product
+                    const inventory = storeInventory[productId] || [];
+                    
+                    // For custom products, generate random inventory
+                    if (inventory.length === 0 && this.selectedProduct) {
+                        const randomInventory = this.generateRandomInventory(this.selectedProduct);
+                        // Display results
+                        this.displayStoreResults(randomInventory);
+                    } else {
+                        // Display results for sample products
+                        this.displayStoreResults(inventory);
+                    }
+                    
+                    this.showLoading(false);
+                }, 1000);
+            }
+            
+            // Generate random inventory for custom products
+            generateRandomInventory(product) {
+                const inventory = [];
+                const price = product.offers.primary.price;
+                
+                // Generate 3-5 random store inventories
+                const storeCount = Math.floor(Math.random() * 3) + 3;
+                const storeIds = [...nearbyStores].sort(() => 0.5 - Math.random()).slice(0, storeCount);
+                
+                storeIds.forEach(store => {
+                    // 30% chance of being out of stock
+                    const inStock = Math.random() > 0.3;
+                    const quantity = inStock ? Math.floor(Math.random() * 20) + 1 : 0;
+                    
+                    inventory.push({
+                        storeId: store.id,
+                        quantity: quantity,
+                        price: price
+                    });
+                });
+                
+                return inventory;
+            }
+            
+            processSearchResults(results) {
+                return results.map(item => {
+                    // Calculate if this is a clearance item
+                    const isClearance = item.offers.primary.regular_price && 
+                                       item.offers.primary.regular_price > item.offers.primary.price;
+                    
+                    // Calculate discount percentage if applicable
+                    const discountPercent = item.offers.primary.regular_price ? 
+                                          Math.round((1 - (item.offers.primary.price / item.offers.primary.regular_price)) * 100) : 0;
+                    
+                    // Ensure we have an array of images
+                    const images = item.product.images || [item.product.primary_image];
+                    
+                    return {
+                        ...item,
+                        isClearance,
+                        discountPercent,
+                        product: {
+                            ...item.product,
+                            images: images
+                        }
+                    };
+                });
+            }
+            
+            displayProducts(products) {
+                this.productResults.innerHTML = '';
+                
+                if (products.length === 0) {
+                    this.displayEmptyState();
+                    return;
+                }
+                
+                products.forEach(item => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    
+                    // Add clearance badge if applicable
+                    if (item.isClearance) {
+                        const badge = document.createElement('div');
+                        badge.className = 'clearance-badge';
+                        badge.textContent = `${item.discountPercent}% OFF`;
+                        productCard.appendChild(badge);
+                    }
+                    
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'product-image';
+                    
+                    const img = document.createElement('img');
+                    img.src = item.product.primary_image;
+                    img.alt = item.product.title;
+                    imageDiv.appendChild(img);
+                    
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'product-info';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'product-title';
+                    title.textContent = item.product.title;
+                    
+                    const brand = document.createElement('div');
+                    brand.className = 'product-brand';
+                    brand.textContent = item.product.brand;
+                    
+                    const price = document.createElement('div');
+                    price.className = 'product-price';
+                    
+                    let priceHTML = `$${item.offers.primary.price.toFixed(2)}`;
+                    if (item.offers.primary.regular_price) {
+                        priceHTML += ` <span class="regular">$${item.offers.primary.regular_price.toFixed(2)}</span>`;
+                    }
+                    price.innerHTML = priceHTML;
+                    
+                    infoDiv.appendChild(title);
+                    infoDiv.appendChild(brand);
+                    infoDiv.appendChild(price);
+                    
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'product-actions';
+                    
+                    const checkBtn = document.createElement('button');
+                    checkBtn.className = 'check-inventory-btn';
+                    checkBtn.textContent = 'Check Availability';
+                    checkBtn.addEventListener('click', () => this.checkProductInventory(item.product.item_id));
+                    
+                    actionsDiv.appendChild(checkBtn);
+                    
+                    productCard.appendChild(imageDiv);
+                    productCard.appendChild(infoDiv);
+                    productCard.appendChild(actionsDiv);
+                    
+                    this.productResults.appendChild(productCard);
+                });
+            }
+            
+            displayStoreResults(inventory) {
+                // Show the modal
+                this.storeResults.style.display = 'block';
+                
+                // Display product details
+                this.storeProductDetails.innerHTML = `
+                    <div class="store-product-image">
+                        <img src="${this.selectedProduct.product.primary_image}" alt="${this.selectedProduct.product.title}">
+                    </div>
+                    <div class="store-product-info">
+                        <h3>${this.selectedProduct.product.title}</h3>
+                        <p>${this.selectedProduct.product.brand} • Model: ${this.selectedProduct.product.model_number || 'N/A'}</p>
+                        <p class="store-product-price">$${this.selectedProduct.offers.primary.price.toFixed(2)}</p>
+                    </div>
+                `;
+                
+                // Clear previous results
+                this.storeTableBody.innerHTML = '';
+                
+                if (inventory.length === 0) {
+                    document.getElementById('inventoryResults').classList.add('hide');
+                    this.noInventory.classList.remove('hide');
+                    return;
+                }
+                
+                document.getElementById('inventoryResults').classList.remove('hide');
+                this.noInventory.classList.add('hide');
+                
+                // Add inventory rows
+                inventory.forEach(store => {
+                    const storeInfo = this.nearbyStores.find(s => s.id === store.storeId);
+                    if (!storeInfo) return;
+                    
+                    const row = document.createElement('tr');
+                    
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = `${storeInfo.name}, ${storeInfo.state}`;
+                    
+                    const distanceCell = document.createElement('td');
+                    distanceCell.textContent = `${storeInfo.distance.toFixed(1)} mi`;
+                    
+                    const priceCell = document.createElement('td');
+                    priceCell.textContent = `$${store.price.toFixed(2)}`;
+                    
+                    const stockCell = document.createElement('td');
+                    if (store.quantity > 0) {
+                        stockCell.innerHTML = `<span class="in-stock">${store.quantity} in stock</span>`;
+                    } else {
+                        stockCell.innerHTML = `<span class="out-of-stock">Out of stock</span>`;
+                    }
+                    
+                    row.appendChild(nameCell);
+                    row.appendChild(distanceCell);
+                    row.appendChild(priceCell);
+                    row.appendChild(stockCell);
+                    
+                    this.storeTableBody.appendChild(row);
+                });
+            }
+            
+            closeStoreResults() {
+                this.storeResults.style.display = 'none';
+            }
+            
+            // Display empty state when no products are found
+            displayEmptyState() {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <div class="empty-state-icon">🔍</div>
+                    <div class="empty-state-text">No deals found. Try a different search or store selection.</div>
+                `;
+                
+                this.productResults.appendChild(emptyState);
+            }
+            
+            showStatus(message, type) {
+                this.statusMessage.textContent = message;
+                this.statusMessage.className = `status ${type}`;
+                this.statusMessage.style.display = 'block';
+                
+                // Hide after 5 seconds
+                setTimeout(() => {
+                    this.statusMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            showLoading(show) {
+                this.loadingDiv.style.display = show ? 'block' : 'none';
+            }
+            
+            // Admin Panel Functions
+            
+            openAdminPanel() {
+                this.adminPanel.style.display = 'block';
+                this.updateDealsList();
+            }
+            
+            closeAdminPanel() {
+                this.adminPanel.style.display = 'none';
+                this.uploadedImages = [];
+                this.imagePreview.innerHTML = '';
+                this.addProductForm.reset();
+            }
+            
+            // Handle image upload preview
+            handleImageUpload(e) {
+                this.imagePreview.innerHTML = '';
+                this.uploadedImages = [];
+                
+                const files = e.target.files;
+                if (!files.length) return;
+                
+                Array.from(files).forEach((file, index) => {
+                    if (!file.type.startsWith('image/')) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const imgData = e.target.result;
+                        this.uploadedImages.push(imgData);
+                        
+                        // Create preview item
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        
+                        const img = document.createElement('img');
+                        img.src = imgData;
+                        img.alt = `Preview ${index + 1}`;
+                        
+                        // Add remove button
+                        const removeBtn = document.createElement('div');
+                        removeBtn.className = 'preview-remove';
+                        removeBtn.textContent = '×';
+                        removeBtn.dataset.index = index;
+                        removeBtn.addEventListener('click', (e) => this.removeUploadedImage(parseInt(e.target.dataset.index)));
+                        
+                        previewItem.appendChild(img);
+                        previewItem.appendChild(removeBtn);
+                        this.imagePreview.appendChild(previewItem);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            // Remove image from preview
+            removeUploadedImage(index) {
+                if (index >= 0 && index < this.uploadedImages.length) {
+                    this.uploadedImages.splice(index, 1);
+                    this.updateImagePreviews();
+                }
+            }
+            
+            // Update image preview display
+            updateImagePreviews() {
+                this.imagePreview.innerHTML = '';
+                
+                this.uploadedImages.forEach((imgData, index) => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = imgData;
+                    img.alt = `Preview ${index + 1}`;
+                    
+                    const removeBtn = document.createElement('div');
+                    removeBtn.className = 'preview-remove';
+                    removeBtn.textContent = '×';
+                    removeBtn.dataset.index = index;
+                    removeBtn.addEventListener('click', (e) => this.removeUploadedImage(parseInt(e.target.dataset.index)));
+                    
+                    previewItem.appendChild(img);
+                    previewItem.appendChild(removeBtn);
+                    this.imagePreview.appendChild(previewItem);
+                });
+            }
+            
+            // Handle adding a new product
+            handleAddProduct(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const title = document.getElementById('productTitle').value;
+                const brand = document.getElementById('productBrand').value;
+                const store = document.getElementById('productStore').value;
+                const model = document.getElementById('productModel').value;
+                const price = parseFloat(document.getElementById('productPrice').value);
+                const regularPrice = document.getElementById('productRegularPrice').value ? 
+                                    parseFloat(document.getElementById('productRegularPrice').value) : null;
+                const description = document.getElementById('productDescription').value;
+                
+                // Validate
+                if (!title || !brand || isNaN(price)) {
+                    this.showStatus('Please fill in all required fields.', 'error');
+                    return;
+                }
+                
+                // Ensure we have at least one image
+                if (this.uploadedImages.length === 0) {
+                    this.showStatus('Please upload at least one product image.', 'error');
+                    return;
+                }
+                
+                // Create new deal
+                const newDeal = {
+                    id: `custom-${Date.now()}`, // Use timestamp as unique ID
+                    title,
+                    brand,
+                    store,
+                    model,
+                    price,
+                    regularPrice,
+                    description,
+                    images: [...this.uploadedImages],
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Add to custom deals
+                this.customDeals.unshift(newDeal);
+                this.saveToLocalStorage();
+                
+                // Update all deals
+                this.updateAllDeals();
+                
+                // Reset form
+                this.addProductForm.reset();
+                this.uploadedImages = [];
+                this.imagePreview.innerHTML = '';
+                
+                // Update UI
+                this.updateDealsList();
+                
+                // If we have a ZIP set, refresh the display
+                if (this.currentZip) {
+                    this.displayFilteredProducts();
+                }
+                
+                this.showStatus('New deal added successfully!', 'success');
+            }
+            
+            // Update deals list in admin panel
+            updateDealsList() {
+                this.dealList.innerHTML = '';
+                
+                if (this.customDeals.length === 0) {
+                    this.dealList.innerHTML = '<p>No custom deals added yet.</p>';
+                    return;
+                }
+                
+                this.customDeals.forEach((deal, index) => {
+                    const dealItem = document.createElement('div');
+                    dealItem.className = 'deal-item';
+                    
+                    const thumb = document.createElement('div');
+                    thumb.className = 'deal-thumb';
+                    
+                    const img = document.createElement('img');
+                    img.src = deal.images[0];
+                    img.alt = deal.title;
+                    thumb.appendChild(img);
+                    
+                    const info = document.createElement('div');
+                    info.className = 'deal-info';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'deal-title';
+                    title.title = deal.title;
+                    title.textContent = deal.title;
+                    
+                    const price = document.createElement('div');
+                    price.className = 'deal-price';
+                    
+                    let priceHTML = `$${deal.price.toFixed(2)}`;
+                    if (deal.regularPrice) {
+                        priceHTML += ` <span class="deal-regular-price">$${deal.regularPrice.toFixed(2)}</span>`;
+                    }
+                    price.innerHTML = priceHTML;
+                    
+                    info.appendChild(title);
+                    info.appendChild(price);
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'deal-delete';
+                    deleteBtn.innerHTML = '&times;';
+                    deleteBtn.dataset.index = index;
+                    deleteBtn.addEventListener('click', (e) => this.handleDeleteDeal(parseInt(e.target.dataset.index)));
+                    
+                    dealItem.appendChild(thumb);
+                    dealItem.appendChild(info);
+                    dealItem.appendChild(deleteBtn);
+                    
+                    this.dealList.appendChild(dealItem);
+                });
+            }
+            
+            // Handle deleting a deal
+            handleDeleteDeal(index) {
+                if (index >= 0 && index < this.customDeals.length) {
+                    this.customDeals.splice(index, 1);
+                    this.saveToLocalStorage();
+                    
+                    // Update all deals
+                    this.updateAllDeals();
+                    
+                    // Update UI
+                    this.updateDealsList();
+                    
+                    // If we have a ZIP set, refresh the display
+                    if (this.currentZip) {
+                        this.displayFilteredProducts();
+                    }
+                    
+                    this.showStatus('Deal deleted successfully.', 'success');
+                }
+            }
+            
+            // Handle clearing all deals
+            handleClearAllDeals() {
+                if (confirm('Are you sure you want to delete all custom deals? This cannot be undone.')) {
+                    this.customDeals = [];
+                    this.saveToLocalStorage();
+                    
+                    // Update all deals
+                    this.updateAllDeals();
+                    
+                    // Update UI
+                    this.updateDealsList();
+                    
+                    // If we have a ZIP set, refresh the display
+                    if (this.currentZip) {
+                        this.displayFilteredProducts();
+                    }
+                    
+                    this.showStatus('All custom deals deleted.', 'success');
+                }
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            const app = new InventorySearchApp();
+            console.log('Press Start Marketplace initialized');
+        });
+    </script>
+</body>
+</html>
